@@ -1,0 +1,2 @@
+[console_scripts]
+exorous = exorous.main:main

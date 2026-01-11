@@ -1,0 +1,12 @@
+openai>=1.0.0
+pydantic>=2.0.0
+click>=8.0.0
+tomli>=2.0.0
+platformdirs>=4.0.0
+httpx>=0.25.0
+duckduckgo-search>=6.0.0
+rich>=13.0.0
+tiktoken>=0.5.0
+fastmcp>=2.0.0
+eval_type_backport
+python-dotenv>=1.0.0
