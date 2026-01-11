@@ -6,6 +6,7 @@ Author: Riazul Islam
 License: MIT
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: openai>=1.0.0
 Requires-Dist: pydantic>=2.0.0
 Requires-Dist: click>=8.0.0
@@ -18,17 +19,39 @@ Requires-Dist: tiktoken>=0.5.0
 Requires-Dist: fastmcp>=2.0.0
 Requires-Dist: eval_type_backport
 Requires-Dist: python-dotenv>=1.0.0
+Dynamic: license-file
 
 # Exorous Code
 
 A professional AI coding agent that can execute tasks using tools and manage complex development workflows.
 
-## Features
+## Installation
 
-### Core Functionality
+Install directly from the source:
 
-- Interactive and single-run modes
-- Streaming text responses
+```bash
+pip install .
+```
+
+Or if you are developing:
+
+```bash
+pip install -e .
+```
+
+## Usage
+
+Start the interactive coding agent:
+
+```bash
+exorous
+```
+
+Alternatively, run a single prompt:
+
+```bash
+exorous "Refactor the main.py file"
+```
 - Multi-turn conversations with tool calling
 - Configurable model settings and temperature
 

@@ -1,3 +1,4 @@
+LICENSE
 README.md
 pyproject.toml
 src/exorous/__init__.py
