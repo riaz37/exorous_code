@@ -1,0 +1,11 @@
+openai
+pydantic
+click
+tomli
+platformdirs
+httpx
+duckduckgo-search
+rich
+tiktoken
+fastmcp
+eval_type_backport
