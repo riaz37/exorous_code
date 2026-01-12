@@ -239,7 +239,7 @@ class TUI:
  [bright_magenta]  ██╔══╝   ██╔██╗ ██║   ██║██╔══██╗██║   ██║██║   ██║╚════██║[/]
  [bright_magenta]  ███████╗██╔╝ ██╗╚██████╔╝██║  ██║╚██████╔╝╚██████╔╝███████║[/]
  [bright_magenta]  ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝[/]
-                    [dim]PROFESSIONAL AI CODING AGENT v0.2.0[/]
+                    [dim]PROFESSIONAL AI CODING AGENT v0.2.1[/]
 ====================================================================
 """
         self.console.print(banner)
