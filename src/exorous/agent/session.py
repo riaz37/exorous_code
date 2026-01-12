@@ -14,6 +14,10 @@ from exorous.safety.approval import ApprovalManager
 from exorous.tools.discovery import ToolDiscoveryManager
 from exorous.tools.mcp.mcp_manager import MCPManager
 from exorous.tools.registry import create_default_registry
+from exorous.context.vector_db import VectorDBManager
+from exorous.context.graph import CodeGraphManager
+from exorous.context.knowledge import ProjectKnowledgeStore
+from exorous.context.indexer import IndexingWorker
 
 
 class Session:
@@ -34,6 +38,13 @@ class Session:
         )
         self.loop_detector = LoopDetector()
         self.hook_system = HookSystem(config)
+        
+        # Intelligence Layer
+        self.vdb = VectorDBManager(get_data_dir(), config.cwd)
+        self.graph = CodeGraphManager(get_data_dir(), config.cwd)
+        self.knowledge = ProjectKnowledgeStore(get_data_dir(), config.cwd)
+        self.indexer = IndexingWorker(self.vdb, self.graph)
+        
         self.session_id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
@@ -47,11 +58,26 @@ class Session:
         self.discovery_manager.discover_all()
         self.context_manager = ContextManager(
             config=self.config,
-            user_memory=self._load_memory(),
+            user_memory=self._load_all_memory(),
             tools=self.tool_registry.get_tools(),
         )
+        
+        # Start background indexing
+        await self.indexer.start()
 
-    def _load_memory(self) -> str | None:
+    def _load_all_memory(self) -> str | None:
+        user_memory = self._load_user_memory()
+        project_knowledge = self.knowledge.get_formatted_knowledge()
+        
+        memories = []
+        if user_memory:
+            memories.append(user_memory)
+        if project_knowledge:
+            memories.append(project_knowledge)
+            
+        return "\n\n".join(memories) if memories else None
+
+    def _load_user_memory(self) -> str | None:
         data_dir = get_data_dir()
         data_dir.mkdir(parents=True, exist_ok=True)
         path = data_dir / "user_memory.json"

@@ -231,7 +231,21 @@ class TUI:
             ".sql": "sql",
         }.get(suffix, "text")
 
+    def print_banner(self) -> None:
+        banner = r"""
+ [bright_magenta]  ███████╗██╗  ██╗ ██████╗ ██████╗  ██████╗ ██╗   ██╗███████╗[/]
+ [bright_magenta]  ██╔════╝╚██╗██╔╝██╔═══██╗██╔══██╗██╔═══██╗██║   ██║██╔════╝[/]
+ [bright_magenta]  █████╗   ╚███╔╝ ██║   ██║██████╔╝██║   ██║██║   ██║███████╗[/]
+ [bright_magenta]  ██╔══╝   ██╔██╗ ██║   ██║██╔══██╗██║   ██║██║   ██║╚════██║[/]
+ [bright_magenta]  ███████╗██╔╝ ██╗╚██████╔╝██║  ██║╚██████╔╝╚██████╔╝███████║[/]
+ [bright_magenta]  ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝[/]
+                    [dim]PROFESSIONAL AI CODING AGENT v0.1.0[/]
+====================================================================
+"""
+        self.console.print(banner)
+
     def print_welcome(self, title: str, lines: list[str]) -> None:
+        self.print_banner()
         body = "\n".join(lines)
         self.console.print(
             Panel(

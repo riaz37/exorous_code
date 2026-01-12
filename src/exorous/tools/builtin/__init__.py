@@ -9,6 +9,7 @@ from exorous.tools.builtin.todo import TodosTool
 from exorous.tools.builtin.web_fetch import WebFetchTool
 from exorous.tools.builtin.web_search import WebSearchTool
 from exorous.tools.builtin.write_file import WriteFileTool
+from exorous.tools.builtin.code_search import CodeSearchTool
 
 __all__ = [
     "ReadFileTool",
@@ -22,6 +23,7 @@ __all__ = [
     "WebFetchTool",
     "TodosTool",
     "MemoryTool",
+    "CodeSearchTool",
 ]
 
 
@@ -38,4 +40,5 @@ def get_all_builtin_tools() -> list[type]:
         WebFetchTool,
         TodosTool,
         MemoryTool,
+        CodeSearchTool,
     ]

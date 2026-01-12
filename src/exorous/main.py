@@ -69,11 +69,9 @@ class CLI:
         tool_kind = None
         tool = self.agent.session.tool_registry.get(tool_name)
         if not tool:
-            tool_kind = None
+            return None
 
-        tool_kind = tool.kind.value
-
-        return tool_kind
+        return tool.kind.value
 
     async def _process_message(self, message: str) -> str | None:
         if not self.agent:

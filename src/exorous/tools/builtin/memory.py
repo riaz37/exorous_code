@@ -1,6 +1,7 @@
 from __future__ import annotations
 import json
-import uuid
+from pathlib import Path
+from typing import Literal, Union, Optional
 from exorous.config.config import Config
 from exorous.config.loader import get_data_dir
 from exorous.tools.base import Tool, ToolInvocation, ToolKind, ToolResult
@@ -15,6 +16,9 @@ class MemoryParams(BaseModel):
         None, description="Memory key (required for `set`, `get`, `delete`)"
     )
     value: str | None = Field(None, description="Value to store (required for `set`)")
+    scope: str = Field(
+        "user", description="Scope: 'user' (global) or 'project' (this codebase only)"
+    )
 
 
 class MemoryTool(Tool):
@@ -44,6 +48,11 @@ class MemoryTool(Tool):
 
         path.write_text(json.dumps(memory, indent=2, ensure_ascii=False))
 
+    def _get_project_store(self, cwd: str):
+        from exorous.context.knowledge import ProjectKnowledgeStore
+
+        return ProjectKnowledgeStore(get_data_dir(), Path(cwd))
+
     async def execute(self, invocation: ToolInvocation) -> ToolResult:
         params = MemoryParams(**invocation.params)
 
@@ -52,11 +61,19 @@ class MemoryTool(Tool):
                 return ToolResult.error_result(
                     "`key` and `value` are required for 'set' action"
                 )
+
+            if params.scope.lower() == "project":
+                store = self._get_project_store(invocation.cwd)
+                store.add_note(f"{params.key}: {params.value}")
+                return ToolResult.success_result(
+                    f"Set project memory: {params.key}"
+                )
+
             memory = self._load_memory()
             memory["entries"][params.key] = params.value
             self._save_memory(memory)
 
-            return ToolResult.success_result(f"Set memory: {params.key}")
+            return ToolResult.success_result(f"Set user memory: {params.key}")
         elif params.action.lower() == "get":
             if not params.key:
                 return ToolResult.error_result("`key` required for 'get' action")
