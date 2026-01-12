@@ -19,6 +19,7 @@ Requires-Dist: tiktoken>=0.5.0
 Requires-Dist: fastmcp>=2.0.0
 Requires-Dist: eval_type_backport
 Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: tomli-w>=1.0.0
 Dynamic: license-file
 
 # Exorous Code
@@ -46,6 +47,10 @@ Start the interactive coding agent:
 ```bash
 exorous
 ```
+
+On the first run, Exorous will prompt you to:
+1. Select your preferred LLM provider (OpenRouter, OpenAI, Anthropic, or Gemini).
+2. Enter your API key for the selected provider.
 
 Alternatively, run a single prompt:
 

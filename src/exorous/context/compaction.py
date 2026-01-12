@@ -1,13 +1,13 @@
 from __future__ import annotations
 from typing import Any
-from exorous.client.llm_client import LLMClient
+from exorous.client.llm_client import LLMGateway
 from exorous.client.response import StreamEventType, TokenUsage
 from exorous.context.manager import ContextManager
 from exorous.prompts.system import get_compression_prompt
 
 
 class ChatCompactor:
-    def __init__(self, client: LLMClient):
+    def __init__(self, client: LLMGateway):
         self.client = client
 
     def _format_history_for_compaction(self, messages: list[dict[str, Any]]) -> str:

@@ -11,8 +11,8 @@ from exorous.agent.agent import Agent
 from exorous.agent.events import AgentEventType
 from exorous.agent.persistence import PersistenceManager, SessionSnapshot
 from exorous.agent.session import Session
-from exorous.config.config import ApprovalPolicy, Config
-from exorous.config.loader import load_config
+from exorous.config.config import ApprovalPolicy, Config, LLMProvider
+from exorous.config.loader import load_config, save_config
 from exorous.ui.tui import TUI, get_console
 
 console = get_console()
@@ -330,13 +330,60 @@ def main(
 
     errors = config.validate()
 
+    cli = CLI(config)
+
+    # Check for missing Provider and prompt if necessary
+    if not config.provider:
+        console.print("\n[bold yellow]Provider Selection[/bold yellow]")
+        console.print("Select an LLM provider to use:")
+        providers = list(LLMProvider)
+        for i, p in enumerate(providers, 1):
+            console.print(f"  {i}. {p.value.title()}")
+            
+        choice = console.input("[user]Select provider (1-4): [/user]").strip()
+        try:
+            config.provider = providers[int(choice) - 1]
+        except (ValueError, IndexError):
+            console.print("[error]Invalid choice. Defaulting to OpenRouter.[/error]")
+            config.provider = LLMProvider.OPENROUTER
+
+        # Update default model for the selected provider
+        from exorous.client.llm_client import LLMGateway
+        provider_cfg = LLMGateway.PROVIDER_MAPPINGS.get(config.provider, {})
+        if "default_model" in provider_cfg:
+            config.model_name = provider_cfg["default_model"]
+
+    # Check for missing API key and prompt if necessary
+    if not config.api_key:
+        console.print(f"\n[bold yellow]API Key Missing for {config.provider.value.title()}[/bold yellow]")
+        if config.provider == LLMProvider.OPENROUTER:
+            console.print("To use OpenRouter, you need an API key from https://openrouter.ai/keys")
+        elif config.provider == LLMProvider.GEMINI:
+            console.print("To use Gemini, you need an API key from https://aistudio.google.com/app/apikey")
+            
+        api_key = console.input("[user]Enter your API Key: [/user]").strip()
+        
+        if not api_key:
+            console.print("[error]API Key is required to proceed.[/error]")
+            sys.exit(1)
+            
+        config.api_key = api_key
+        
+        if confirm := console.input("[user]Save configuration globally? (y/n): [/user]").lower().strip() == 'y':
+            try:
+                save_config(config)
+                console.print("[success]Configuration saved globally.[/success]")
+            except Exception as e:
+                console.print(f"[error]Failed to save config: {e}[/error]")
+        else:
+            console.print("[dim]Configuration will be used for this session only.[/dim]")
+
+    # Re-validate after potential setup
+    errors = config.validate()
     if errors:
         for error in errors:
             console.print(f"[error]{error}[/error]")
-
         sys.exit(1)
-
-    cli = CLI(config)
 
     # messages = [{"role": "user", "content": prompt}]
     if prompt:

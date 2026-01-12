@@ -4,6 +4,7 @@ from typing import Any
 
 from platformdirs import user_config_dir, user_data_dir
 import tomli
+import tomli_w
 
 from exorous.config.config import Config
 from exorous.utils.errors import ConfigError
@@ -16,11 +17,11 @@ AGENT_MD_FILE = "AGENT.MD"
 
 
 def get_config_dir() -> Path:
-    return Path(user_config_dir("exorous-code"))
+    return Path(user_config_dir("exorous"))
 
 
 def get_data_dir() -> Path:
-    return Path(user_data_dir("exorous-code"))
+    return Path(user_data_dir("exorous"))
 
 
 def get_system_config_path() -> Path:
@@ -109,3 +110,19 @@ def load_config(cwd: Path | None) -> Config:
         raise ConfigError(f"Invalid configuration: {e}") from e
 
     return config
+
+def save_config(config: Config) -> None:
+    system_path = get_system_config_path()
+    system_path.parent.mkdir(parents=True, exist_ok=True)
+
+    config_dict = config.to_dict()
+
+    # Clean up fields we don't want in the persistent config
+    config_dict.pop("cwd", None)
+    config_dict.pop("developer_instructions", None)
+
+    with open(system_path, "wb") as f:
+        tomli_w.dump(config_dict, f)
+
+    # Set restrictive permissions for the config file
+    system_path.chmod(0o600)

@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 from typing import Any
 import uuid
-from exorous.client.llm_client import LLMClient
+from exorous.client.llm_client import LLMGateway
 from exorous.config.config import Config
 from exorous.config.loader import get_data_dir
 from exorous.context.compaction import ChatCompactor
@@ -19,7 +19,7 @@ from exorous.tools.registry import create_default_registry
 class Session:
     def __init__(self, config: Config):
         self.config = config
-        self.client = LLMClient(config=config)
+        self.client = LLMGateway(config=config)
         self.tool_registry = create_default_registry(config)
         self.context_manager: ContextManager | None = None
         self.discovery_manager = ToolDiscoveryManager(

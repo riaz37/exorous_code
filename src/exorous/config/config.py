@@ -6,6 +6,13 @@ from typing import Any
 from pydantic import BaseModel, Field, model_validator
 
 
+class LLMProvider(str, Enum):
+    OPENROUTER = "openrouter"
+    OPENAI = "openai"
+    ANTHROPIC = "anthropic"
+    GEMINI = "gemini"
+
+
 class ModelConfig(BaseModel):
     name: str = "mistralai/devstral-2512:free"
     temperature: float = Field(default=1, ge=0.0, le=2.0)
@@ -55,7 +62,7 @@ class ApprovalPolicy(str, Enum):
     ON_REQUEST = "on-request"
     ON_FAILURE = "on-failure"
     AUTO = "auto"
-    AUTO_EDIT = "auto-edut"
+    AUTO_EDIT = "auto-edit"
     NEVER = "never"
     YOLO = "yolo"
 
@@ -102,12 +109,10 @@ class Config(BaseModel):
 
     developer_instructions: str | None = None
     user_instructions: str | None = None
+    provider: LLMProvider | None = None
+    api_key: str | None = None
 
     debug: bool = False
-
-    @property
-    def api_key(self) -> str | None:
-        return os.environ.get("API_KEY")
 
     @property
     def base_url(self) -> str | None:
@@ -133,7 +138,7 @@ class Config(BaseModel):
         errors: list[str] = []
 
         if not self.api_key:
-            errors.append("No API key found. Set API_KEY environment variable")
+            errors.append("No API key found. Use 'exorous' to set up your API key.")
 
         if not self.cwd.exists():
             errors.append(f"Working directory does not exist: {self.cwd}")
@@ -141,4 +146,4 @@ class Config(BaseModel):
         return errors
 
     def to_dict(self) -> dict[str, Any]:
-        return self.model_dump(mode="json")
+        return self.model_dump(mode="json", exclude_none=True)

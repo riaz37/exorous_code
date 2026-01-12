@@ -24,6 +24,10 @@ Start the interactive coding agent:
 exorous
 ```
 
+On the first run, Exorous will prompt you to:
+1. Select your preferred LLM provider (OpenRouter, OpenAI, Anthropic, or Gemini).
+2. Enter your API key for the selected provider.
+
 Alternatively, run a single prompt:
 
 ```bash

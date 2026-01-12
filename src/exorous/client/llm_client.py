@@ -12,10 +12,29 @@ from exorous.client.response import (
     ToolCallDelta,
     parse_tool_call_arguments,
 )
-from exorous.config.config import Config
+from exorous.config.config import Config, LLMProvider
 
 
-class LLMClient:
+class LLMGateway:
+    PROVIDER_MAPPINGS = {
+        LLMProvider.OPENROUTER: {
+            "base_url": "https://openrouter.ai/api/v1",
+            "default_model": "mistralai/devstral-2512:free",
+        },
+        LLMProvider.OPENAI: {
+            "base_url": "https://api.openai.com/v1",
+            "default_model": "gpt-4o",
+        },
+        LLMProvider.ANTHROPIC: {
+            "base_url": "https://api.anthropic.com/v1",
+            "default_model": "claude-3-5-sonnet-20241022",
+        },
+        LLMProvider.GEMINI: {
+            "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+            "default_model": "gemini-1.5-pro",
+        },
+    }
+
     def __init__(self, config: Config) -> None:
         self._client: AsyncOpenAI | None = None
         self._max_retries: int = 3
@@ -23,9 +42,12 @@ class LLMClient:
 
     def get_client(self) -> AsyncOpenAI:
         if self._client is None:
+            provider_cfg = self.PROVIDER_MAPPINGS.get(self.config.provider, {})
+            base_url = self.config.base_url or provider_cfg.get("base_url")
+            
             self._client = AsyncOpenAI(
-                api_key=self.config.api_key,  # "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"
-                base_url=self.config.base_url,  # "https://openrouter.ai/api/v1"
+                api_key=self.config.api_key,
+                base_url=base_url,
             )
         return self._client
 

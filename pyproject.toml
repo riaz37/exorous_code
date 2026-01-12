@@ -25,6 +25,7 @@ dependencies = [
     "fastmcp>=2.0.0",
     "eval_type_backport",
     "python-dotenv>=1.0.0",
+    "tomli-w>=1.0.0",
 ]
 
 [project.scripts]
