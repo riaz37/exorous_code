@@ -2,9 +2,19 @@
 
 A professional AI coding agent that can execute tasks using tools and manage complex development workflows.
 
+## Prerequisites
+
+- **Python 3.10 or higher** is required.
+
 ## Installation
 
-Install directly from the source:
+Install via PyPI:
+
+```bash
+pip install exorous
+```
+
+Alternatively, install directly from the source:
 
 ```bash
 pip install .
