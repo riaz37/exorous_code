@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: exorous
-Version: 0.1.0
+Version: 0.2.0
 Summary: A professional AI coding agent that can execute tasks using tools and manage complex development workflows.
 Author: Riazul Islam
 License: MIT
@@ -20,6 +20,11 @@ Requires-Dist: fastmcp>=2.0.0
 Requires-Dist: eval_type_backport
 Requires-Dist: python-dotenv>=1.0.0
 Requires-Dist: tomli-w>=1.0.0
+Requires-Dist: chromadb>=0.4.0
+Requires-Dist: jedi>=0.19.0
+Requires-Dist: networkx>=3.0
+Requires-Dist: sentence-transformers>=2.2.0
+Requires-Dist: watchdog>=3.0.0
 Dynamic: license-file
 
 # Exorous Code
@@ -130,6 +135,14 @@ exorous "Refactor the main.py file"
 - Developer and user instructions
 - Shell environment policies
 - MCP server configuration
+
+### Advanced Intelligence
+
+- **Semantic Search (RAG)**: Index the entire codebase into a local vector database (ChromaDB) for meaning-based code retrieval.
+- **AST-based Chunking**: Intelligent code splitting for high-fidelity semantic search.
+- **Knowledge Graph**: Full symbol map (functions, classes, imports) with cross-file relationship tracking.
+- **Real-time Indexing**: Automatic background updates as you modify your code.
+- **Long-Term Memory**: Persistent project-wide conventions and decisions that survive session restarts.
 
 ### User Interface
 

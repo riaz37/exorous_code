@@ -107,6 +107,14 @@ exorous "Refactor the main.py file"
 - Shell environment policies
 - MCP server configuration
 
+### Advanced Intelligence
+
+- **Semantic Search (RAG)**: Index the entire codebase into a local vector database (ChromaDB) for meaning-based code retrieval.
+- **AST-based Chunking**: Intelligent code splitting for high-fidelity semantic search.
+- **Knowledge Graph**: Full symbol map (functions, classes, imports) with cross-file relationship tracking.
+- **Real-time Indexing**: Automatic background updates as you modify your code.
+- **Long-Term Memory**: Persistent project-wide conventions and decisions that survive session restarts.
+
 ### User Interface
 
 - Terminal UI with formatted output
